@@ -167,20 +167,38 @@ window.addEventListener("keydown", function (event) {
   }
 });
 
-window.addEventListener("mousedown", function (event) {
+function handleInteractionStart() {
   if (phase == "waiting") {
     lastTimestamp = undefined;
     introductionElement.style.opacity = 0;
     phase = "stretching";
     window.requestAnimationFrame(animate);
   }
-});
+}
 
-window.addEventListener("mouseup", function (event) {
+function handleInteractionEnd() {
   if (phase == "stretching") {
     phase = "turning";
   }
+}
+
+window.addEventListener("mousedown", function (event) {
+  handleInteractionStart();
 });
+
+window.addEventListener("mouseup", function (event) {
+  handleInteractionEnd();
+});
+
+window.addEventListener("touchstart", function (event) {
+  event.preventDefault();
+  handleInteractionStart();
+}, { passive: false });
+
+window.addEventListener("touchend", function (event) {
+  event.preventDefault();
+  handleInteractionEnd();
+}, { passive: false });
 
 window.addEventListener("resize", function (event) {
   canvas.width = window.innerWidth;
